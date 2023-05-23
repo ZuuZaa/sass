@@ -1,0 +1,11 @@
+@use 'src/variables' as var;
+
+body {
+    margin: 0;
+    background: var.$bg;
+    color: var.$primary;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
