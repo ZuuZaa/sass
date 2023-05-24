@@ -1,6 +1,7 @@
-
-@use '/src/variables'; 
+@use '/src/variables';
 @use 'src/base';
+@use 'sass:map'; //  for map methods
+@use 'sass:color'; // for color changing methods
 
 
 :root {
@@ -13,13 +14,14 @@
   background-color: #242424;
 }
 
-                             
+
 
 a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -47,23 +49,175 @@ h1 {
 
 
 .btn {
-  
-  color:red;
+
+  color: red;
+
   &-primary {
     @include btn($bg: #AAA);
   }
-  .container & {    // for parent select
+
+  .container & {
+    // for parent select
     margin: 2rem;
   }
+
   &-green {
     @extend .btn-simple;
     background: olive;
-    color:antiquewhite
+    color: antiquewhite
   }
+
   &-red {
     @extend .btn-simple;
     background: rosybrown;
-    color:rgb(146, 146, 146);
+    color: rgb(146, 146, 146);
   }
 }
+
+
+// placeholder // you dont need extra class name
+
+%text {
+  display: inline-block;
+  margin-inline: 3em;
+  padding: 2em 4em;
+  font-size: 1.4rem;
+  border-radius: 0.6em;
+}
+
+.text-primary {
+  @extend %text;
+  background: rgb(100, 82, 82);
+  color: #fafafa;
+}
+
+.text-secondary {
+  @extend %text;
+  background: rgb(100, 100, 49);
+  color: #fafafa;
+}
+
+
+// interpolation comment 
+
+$color : #333;
+
+/* This color is #{$color} */
+
+
+
+// arrays 
+$myArray: primary secondary warning "item info";
+/* #{nth($myArray, 1)} */
+$myArray: primary, secondary, warning, "item info";
+/* #{nth($myArray, 2)} */
+$myArray: (
+  primary,
+  secondary,
+  warning,
+  "item info"
+);
+/* #{nth($myArray, -1)} */
+$myArray: [primary secondary warning];
+/* #{nth($myArray, 1)} */
+
+
+
+// ARRAY (LIST) METHODS
+
+// length($myList)
+// nth($myList, 2)
+// set-nth($myList, 2, value)
+// index($myList, orange)
+// append($myList, newValue, comma | space)
+// join($myList1, $myList2, comma | space)
+// zip($myList1, $myList2)
+// is-bracketed($myList)
+// list-separator($myList)
+
+$myList1: primary, secondary, warning, dark;
+$myList2: [ red orange green cyan];
+
+/* length: #{length($myList2)} */
+/* second: #{nth($myList2, 2)} */
+/* set second: #{set-nth($myList1, 2, basic)} */
+/* index: #{index($myList2, orange)} */
+/* append: #{append($myList2, whitesmoke, space)} */
+/* join: #{join($myList1, $myList2, comma )} */
+/* zip: #{zip($myList1, $myList2)} */
+/* brackeded: #{is-bracketed($myList1)} */
+/* separator: #{list-separator($myList2)} */
+
+
+
+// LOOP
+
+$fontSize: (
+  3rem,
+  2.5rem,
+  1.5rem
+);
+
+@for $i from 1 through length($fontSize) {
+  h#{$i} {
+    font-size: nth($fontSize , $i );
+  }
+}
+
+
+// map method
+
+$colorList: (
+  'primary': #eee,
+  'secondary': #444,
+  'dark': #aaa,
+  'blue': rgb(167, 167, 222)
+);
+
+p {
+  color: #{map.get($colorList, 'blue')}
+}
+
+
+/* color: #{map.get($colorList, 'primary')} */
+
+
+$typography: (
+  '-blue': (
+    blue, white
+  ),
+  '-green': (
+    green, black, true
+  )
+);
+
+@mixin text($name:"", $bg: #444, $color: whitesmoke, $rounded: false){
+  .text#{$name} {
+    font-size: 1.5rem;
+    text-decoration: underline;
+    background: $bg;
+    color: $color;
+    padding: 1em 4em;
+    margin: 2em auto;
+    width: max-content;
+    text-align: center;
+    @if $rounded {
+      border-radius: 50%;
+    }@else {
+      border-radius: 5px;
+    }
+  }
+}
+
+@include text("");
+@each $key, $value in $typography {
+  @include text($key, $value... )
+}
+
+
+
+
+// COLORS 
+
+
 
